@@ -64,7 +64,7 @@ public class PSOViewerPanel extends JPanel {
         graphics2D.setColor(Color.BLACK);
 
         for (int i = 0; i < particles.size(); i++) {
-            graphics2D.fill(new Ellipse2D.Double(35.0 + i * (((double) this.getWidth() - 35.0) / particles.size()), particles.get(i).getFitness() * scale, 2, 2));
+            graphics2D.fill(new Ellipse2D.Double(40.0 + i * (((double) this.getWidth() - 40.0) / particles.size()), particles.get(i).getFitness() * scale, 2, 2));
         }
     }
 }

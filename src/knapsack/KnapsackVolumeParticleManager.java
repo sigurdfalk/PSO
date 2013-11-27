@@ -25,7 +25,7 @@ public class KnapsackVolumeParticleManager extends KnapsackParticleManager {
 
     @Override
     protected void setPackages() throws IOException {
-        this.packages = getKnapsackPackages(2000);
+        this.packages = getKnapsackPackages(2001);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class KnapsackVolumeParticleManager extends KnapsackParticleManager {
             }
         }
 
-        return "totalValue: " + totalValue + " - totalWeight: " + totalWeight + " - totalVolume: " + totalVolume;
+        return "totalWeight: " + totalWeight + " - totalVolume: " + totalVolume;
     }
 
     @Override

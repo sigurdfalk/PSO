@@ -13,7 +13,8 @@ public class CirclePSOSearch extends PSOSearch {
     public static final double C1 = 1.5;
     public static final double C2 = 1.5;
     public static final double FITNESS_LIMIT = 0.001;
-    public static final double VELOCITY_CLAMP = 0.1;
+    public static final double VELOCITY_CLAMP_MAX = 0.1;
+    public static final double VELOCITY_CLAMP_MIN = -0.1;
 
     public CirclePSOSearch(ParticleManager particleManager) {
         super(particleManager);
@@ -40,8 +41,13 @@ public class CirclePSOSearch extends PSOSearch {
     }
 
     @Override
-    protected double getVelocityClampValue() {
-        return VELOCITY_CLAMP;
+    protected double getVelocityClampMax() {
+        return VELOCITY_CLAMP_MAX;
+    }
+
+    @Override
+    protected double getVelocityClampMin() {
+        return VELOCITY_CLAMP_MIN;
     }
 
     @Override

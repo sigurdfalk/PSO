@@ -25,29 +25,27 @@ public abstract class PSOSearch {
         this.particleManager = particleManager;
     }
 
-    public void search(int maxIterations, long delay, boolean useInertiaWeight, boolean useThreeNeighborPosition) {
+    public void search(int maxIterations, long delay, boolean useInertiaWeight, boolean useThreeNeighborPosition, boolean visualize) {
         this.swarm = particleManager.getInitialSwarm();
         this.globalBestPosition = null;
         this.globalBestFitness = getInitialGlobalBestFitness();
         this.maxIterations = maxIterations;
 
+        if (useThreeNeighborPosition) {
+            updateThreeNeighborBestPosition(swarm);
+        } else {
+            updateGlobalBestPosition();
+        }
+
         double inertiaWeight = useInertiaWeight ? INERTIA_WEIGHT_START : 1.0;
 
         for (int i = 0; i < maxIterations; i++) {
-            System.out.println("inertiaWeight(" + i + "): " + inertiaWeight);
-
-            if (useThreeNeighborPosition) {
-                updateThreeNeighborBestPosition(swarm);
-            } else {
-                System.out.println("globalBest(" + i + "): " + particleManager.getPositionString(globalBestPosition));
-                updateGlobalBestPosition();
-            }
-
+            int j = 0;
             for (Particle particle : swarm) {
                 double particleFitness = particle.getFitness();
 
                 if (useThreeNeighborPosition) {
-                    System.out.println("threeBest(" + i + "): " + particleManager.getPositionString(particle.getThreeNeighborBestPosition()));
+                    System.out.println("threeBest(" + i + ", " + (j++) + "): fitness: " + particleManager.fitness(particle.getThreeNeighborBestPosition()) + " - " + particleManager.getPositionString(particle.getThreeNeighborBestPosition()));
                     particle.setVelocity(getNewVelocity(particle, particle.getThreeNeighborBestPosition(), inertiaWeight));
                 } else {
                     particle.setVelocity(getNewVelocity(particle, globalBestPosition, inertiaWeight));
@@ -66,21 +64,33 @@ public abstract class PSOSearch {
 
                     if (exceededFitnessLimit(newParticleFitness)) {
                         updateGlobalBestPosition();
+                        System.out.println("exceededFitnessLimit(" + i + "): fitness: " + globalBestFitness + " - " + particleManager.getPositionString(globalBestPosition));
                         return;
                     }
                 }
 
-                particleManager.printSwarm(swarm, globalBestFitness);
+                if (visualize) {
+                    particleManager.printSwarm(swarm, globalBestFitness);
+                }
             }
 
             if (useInertiaWeight) {
+                System.out.println("inertiaWeight(" + i + "): " + inertiaWeight);
                 inertiaWeight = getInertiaWeight(inertiaWeight);
+            }
+
+            if (useThreeNeighborPosition) {
+                updateThreeNeighborBestPosition(swarm);
+            } else {
+                updateGlobalBestPosition();
+                System.out.println("globalBest(" + i + "): fitness: " + globalBestFitness + " - " + particleManager.getPositionString(globalBestPosition));
             }
 
             Util.sleepThread(delay);
         }
 
         updateGlobalBestPosition();
+        System.out.println("exceededMaxIterations(" + maxIterations + "): fitness: " + globalBestFitness + " - " + particleManager.getPositionString(globalBestPosition));
     }
 
     protected double[] getNewVelocity(Particle particle, double[] globalBestPosition, double inertiaWeight) {
@@ -108,12 +118,10 @@ public abstract class PSOSearch {
     }
 
     protected double getClampedVelocity(double velocity) {
-        if (Math.abs(velocity) > getVelocityClampValue()) {
-            if (velocity < 0) {
-                velocity = -getVelocityClampValue();
-            } else {
-                velocity = getVelocityClampValue();
-            }
+        if (velocity > getVelocityClampMax()) {
+            velocity = getVelocityClampMax();
+        } else if (velocity < getVelocityClampMin()) {
+            velocity = getVelocityClampMin();
         }
 
         return velocity;
@@ -178,7 +186,9 @@ public abstract class PSOSearch {
 
     protected abstract boolean exceededFitnessLimit(double fitness);
 
-    protected abstract double getVelocityClampValue();
+    protected abstract double getVelocityClampMax();
+
+    protected abstract double getVelocityClampMin();
 
     protected abstract boolean doUpdateGlobalBestPosition(double fitness);
 

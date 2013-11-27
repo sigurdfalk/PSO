@@ -41,8 +41,8 @@ public class Circle2DParticleManager extends CircleParticleManager {
 
         for (int i = 0; i < swarmSize; i++) {
             double[] position = new double[2];
-            position[0] = Util.getRandomDouble(-5.0, 5.0);
-            position[1] = Util.getRandomDouble(-5.0, 5.0);
+            position[0] = Util.getRandomDouble(-10.0, 10.0);
+            position[1] = Util.getRandomDouble(-10.0, 10.0);
 
             double[] velocity = new double[2];
             velocity[0] = Util.getRandomDouble(-0.1, 0.1);

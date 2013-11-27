@@ -30,8 +30,7 @@ public class PSOViewer extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("PSO Viewer");
-        setSize(800, 900);
-        setVisible(true);
+        setSize(825, 1000);
     }
 
     public void drawUI(ArrayList<Particle> particles, double globalBestFitness) {

@@ -20,6 +20,7 @@ public abstract class ParticleManager {
     }
 
     public void printSwarm(ArrayList<Particle> particles, double globalBestFitness) {
+        psoViewer.setVisible(true);
         psoViewer.drawUI(particles, globalBestFitness);
     }
 
